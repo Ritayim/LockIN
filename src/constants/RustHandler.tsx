@@ -1,0 +1,1 @@
+export const INIT_WEBCAM = "init_webcam";
