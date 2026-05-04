@@ -5,8 +5,7 @@ mod webcam;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
-        .setup(|app| {
-            webcam::start_camera();
+        .setup(|_app| {
             Ok(())
         })
         .plugin(tauri_plugin_opener::init())
