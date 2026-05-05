@@ -2,14 +2,6 @@
 
 Desktop app that shows a live webcam preview and estimates **eye movement**, **head pose** (yaw / pitch), and **person presence** using a YOLO pose model. The UI is built with **React** and **TypeScript**; tracking runs in a **Python** subprocess orchestrated by **Tauri 2** (Rust).
 
-## Features
-
-- Enumerate cameras and pick an index before starting
-- Stream JPEG preview plus per-frame JSON metrics over Tauri events
-- Directional eye-movement summary (Δx, Δy, magnitude, steady / directional label)
-- Head yaw and pitch derived from pose keypoints
-- Person count and bounding box when a body is detected
-
 ## Requirements
 
 | Component | Notes |
