@@ -395,7 +395,7 @@ def attach_eye_summary(payload: dict) -> dict:
 # ─── Main Loop ────────────────────────────────────────────────────────────────
 
 def main():
-    model_path   = sys.argv[1] if len(sys.argv) > 1 else "models/yolo11n-pose.pt"
+    model_path   = sys.argv[1] if len(sys.argv) > 1 else "models/yolo26n-pose.pt"
     camera_index = int(sys.argv[2]) if len(sys.argv) > 2 else 0
 
     tracker = Tracker(model_path=model_path, camera_index=camera_index)

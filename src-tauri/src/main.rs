@@ -99,12 +99,12 @@ fn start_tracking(
 ) -> Result<(), String> {
     stop_tracker_inner(&child_state);
 
-    let script = manifest_dir().join("binaries").join("eye_tracker.py");
+    let script: PathBuf = manifest_dir().join("binaries").join("eye_tracker.py");
     if !script.is_file() {
         return Err(format!("missing {}", script.display()));
     }
 
-    let model_path = manifest_dir().join("models").join("yolo11n-pose.pt");
+    let model_path = manifest_dir().join("models").join("yolo26n-pose.pt");
     let model_str = model_path.to_string_lossy().to_string();
     let extra = vec![model_str, camera_index.to_string()];
 
