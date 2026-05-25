@@ -1,7 +1,6 @@
 # binaries/list_cameras.py
 import json
 import platform
-
 import cv2
 
 
@@ -12,7 +11,6 @@ def _open_probe(index: int) -> cv2.VideoCapture:
             return cap
         cap.release()
     return cv2.VideoCapture(index)
-
 
 def list_cameras(max_check: int = 5) -> list[dict]:
     cameras = []

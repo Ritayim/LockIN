@@ -1,4 +1,12 @@
-ultralytics
-opencv-python
-numpy
-pyinstaller
+# Python deps used by tracker.py / list_cameras.py.
+# Install once with:
+#     py -3 -m pip install -r src-tauri/binaries/requirements.txt
+#
+# MediaPipe is used for iris-level eye-gaze tracking; if it can't be
+# installed (Python version mismatch, etc.) the tracker still runs and
+# falls back to head-pose-based "down" detection.
+
+ultralytics>=8.3
+opencv-python>=4.9
+mediapipe>=0.10.14
+numpy>=1.26

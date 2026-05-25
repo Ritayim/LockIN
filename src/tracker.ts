@@ -42,11 +42,32 @@ export interface PersonState {
   bbox: { x: number; y: number; width: number; height: number } | null;
 }
 
+export type GazeState = "straight" | "down" | "away" | "absent";
+
+export interface GazeDebug {
+  pitch_ratio: number | null;
+  horizontal_ratio: number | null;
+  eyes_visible: "both" | "left" | "right" | "none";
+  iris_pitch: number | null;
+  iris_left: number | null;
+  iris_right: number | null;
+  ear_left: number | null;
+  ear_right: number | null;
+  pitch_source: "eye" | "head" | null;
+  down_threshold: number;
+  iris_threshold: number;
+  ear_min: number;
+  left_threshold: number;
+  right_threshold: number;
+}
+
 export interface TrackingFrame {
   person: PersonState;
   head: HeadState | null;
   eyes: EyeState | null;
   eye_movement: EyeMovement;
+  gaze_state: GazeState;
+  gaze_debug?: GazeDebug;
   timestamp_ms: number;
   preview_jpeg_b64?: string;
 }
