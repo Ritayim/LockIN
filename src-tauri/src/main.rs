@@ -166,6 +166,7 @@ fn stop_tracking(child_state: State<'_, TrackerChild>) -> Result<(), String> {
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_notification::init())
         .manage(TrackerChild(Arc::new(Mutex::new(None))))
         .invoke_handler(tauri::generate_handler![list_cameras, start_tracking, stop_tracking])
         .run(tauri::generate_context!())

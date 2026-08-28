@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
+  isPermissionGranted,
+  requestPermission,
+  sendNotification,
+} from "@tauri-apps/plugin-notification";
+import {
   getCameras,
   startTrackingSession,
   stopTracking,
@@ -25,17 +30,17 @@ const AWAY_DEBOUNCE_MS = 400;
 // frame rate so the UI stays smooth even if frames are sparse.
 const COUNTER_TICK_MS = 250;
 
-function ensureNotificationPermission(): Promise<NotificationPermission> {
-  if (typeof window === "undefined" || !("Notification" in window)) {
-    return Promise.resolve("denied");
+async function ensureNotificationPermission(): Promise<boolean> {
+  try {
+    if (await isPermissionGranted()) return true;
+    return (await requestPermission()) === "granted";
+  } catch (e) {
+    console.error("Notification permission check failed:", e);
+    return false;
   }
-  if (Notification.permission === "granted" || Notification.permission === "denied") {
-    return Promise.resolve(Notification.permission);
-  }
-  return Notification.requestPermission();
 }
 
-function fireAwayNotification(state: GazeState, awaySec: number) {
+async function fireAwayNotification(state: GazeState, awaySec: number) {
   const body =
     state === "down"
       ? `You've been looking down for ${awaySec}s. Eyes up — get back on track.`
@@ -43,13 +48,12 @@ function fireAwayNotification(state: GazeState, awaySec: number) {
       ? `You've been looking away for ${awaySec}s. Refocus on the monitor.`
       : `Camera hasn't seen you for ${awaySec}s. Are you still here?`;
 
-  if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted") {
-    try {
-      new Notification("LockIN — refocus", { body, tag: "lockin-away" });
-      return;
-    } catch {
-      // fall through to in-app banner
+  try {
+    if (await ensureNotificationPermission()) {
+      sendNotification({ title: "LockIN — refocus", body });
     }
+  } catch (e) {
+    console.error("Failed to send system notification:", e);
   }
 }
 
@@ -60,7 +64,7 @@ export default function App() {
   const [status, setStatus] = useState("Idle");
   const [frame, setFrame] = useState<TrackingFrame | null>(null);
 
-  const [thresholdSec, setThresholdSec] = useState(10);
+  const [thresholdSec, setThresholdSec] = useState(60);
   const [awayMs, setAwayMs] = useState(0);
   const [alertActive, setAlertActive] = useState(false);
 
@@ -164,7 +168,7 @@ export default function App() {
         if (!notifiedRef.current) {
           notifiedRef.current = true;
           const state = lastGazeRef.current;
-          fireAwayNotification(state, Math.round(visibleElapsed / 1000));
+          void fireAwayNotification(state, Math.round(visibleElapsed / 1000));
         }
       } else {
         setAlertActive(false);

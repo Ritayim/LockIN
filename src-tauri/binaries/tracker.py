@@ -21,10 +21,11 @@ from typing import Optional
 # refined iris landmarks (indices 468 / 473) when a face_landmarker.task
 # model is provided.
 try:
-    import mediapipe as mp 
-    from mediapipe.tasks.python import BaseOptions as _MpBaseOptions 
+    import mediapipe as mp
+    from mediapipe.tasks.python import BaseOptions as _MpBaseOptions
+    from mediapipe.tasks.python import vision as _mp_vision
     _MEDIAPIPE_OK = True
-except Exception as _mp_err: 
+except Exception as _mp_err:
     mp = None 
     _MpBaseOptions = None 
     _mp_vision = None  
@@ -194,6 +195,13 @@ class ExponentialSmoother:
 # ─── Tracker ──────────────────────────────────────────────────────────────────
 
 class Tracker:
+    # Aliased onto the class (not just module globals) because gaze_info()
+    # and main() read them off `self.` / `Tracker.` respectively.
+    DOWN_PITCH_THRESHOLD = DOWN_PITCH_THRESHOLD
+    IRIS_DOWN_THRESHOLD = IRIS_DOWN_THRESHOLD
+    LEFT_HORIZONTAL_THRESHOLD = LEFT_HORIZONTAL_THRESHOLD
+    RIGHT_HORIZONTAL_THRESHOLD = RIGHT_HORIZONTAL_THRESHOLD
+
     def __init__(self, model_path: str, camera_index: int = 0,
                  face_landmarker_path: Optional[str] = None):
         self.smoother = ExponentialSmoother(alpha=0.4)

@@ -29,6 +29,7 @@ function WebcamCapture() {
     try {
       const result = await invoke<EyeDetectionResult>('detect_eye_movement');
       setEyeResult(result.eye_movement);
+      console.log(result)
     } catch (e) {
       console.error('Eye detection failed:', e);
     } finally {
